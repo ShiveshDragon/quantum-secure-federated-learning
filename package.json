@@ -1,0 +1,22 @@
+{
+  "name": "quantum-project-1",
+  "version": "1.0.0",
+  "description": "Quantum-Secured Federated Learning for IoT Networks - Research Prototype & Frontend Dashboard",
+  "main": "server/api_server.py",
+  "scripts": {
+    "start": "python server/api_server.py",
+    "dev": "python server/api_server.py",
+    "serve-frontend": "npx -y serve frontend -p 3000"
+  },
+  "keywords": [
+    "quantum-computing",
+    "federated-learning",
+    "e91-qkd",
+    "iot-security",
+    "chsh",
+    "aes-gcm",
+    "qiskit"
+  ],
+  "author": "Chethana Mallisetty",
+  "license": "MIT"
+}

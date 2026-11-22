@@ -1,0 +1,11 @@
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+scikit-learn>=1.5
+qiskit>=1.2
+qiskit-aer>=0.15
+cryptography>=43
+paho-mqtt>=2.1
+pytest>=8
+Flask>=3.0
+flask-cors>=4.0

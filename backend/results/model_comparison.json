@@ -1,0 +1,62 @@
+{
+  "centralized": {
+    "accuracy": 0.85,
+    "precision": 0.7662337662337663,
+    "recall": 1.0,
+    "f1": 0.8676470588235293,
+    "tp": 59,
+    "tn": 43,
+    "fp": 18,
+    "fn": 0
+  },
+  "federated_final": {
+    "accuracy": 0.85,
+    "precision": 0.7662337662337663,
+    "recall": 1.0,
+    "f1": 0.8676470588235293,
+    "tp": 59,
+    "tn": 43,
+    "fp": 18,
+    "fn": 0,
+    "round": 5,
+    "total_round_time": 0.0033557000006112503,
+    "aggregation_time": 0.00044939999952475773,
+    "aggregation_method": "fedavg",
+    "secure": 0,
+    "clients": 5,
+    "malicious_count": 0,
+    "malicious_clients": [],
+    "non_iid": 0,
+    "mean_train_time": 0.0005122600001413957,
+    "mean_encrypt_time": 0.0,
+    "mean_security_time": 0.0,
+    "total_payload_bytes": 0
+  },
+  "secure_federated_final": {
+    "accuracy": 0.85,
+    "precision": 0.7662337662337663,
+    "recall": 1.0,
+    "f1": 0.8676470588235293,
+    "tp": 59,
+    "tn": 43,
+    "fp": 18,
+    "fn": 0,
+    "round": 5,
+    "total_round_time": 0.006480500000179745,
+    "aggregation_time": 0.0004970999998477055,
+    "aggregation_method": "fedavg",
+    "secure": 1,
+    "clients": 5,
+    "malicious_count": 0,
+    "malicious_clients": [],
+    "non_iid": 0,
+    "mean_train_time": 0.0007041200000458048,
+    "mean_encrypt_time": 0.00012841999996453523,
+    "mean_security_time": 0.0001106600000639446,
+    "total_payload_bytes": 3531
+  },
+  "qkd": {
+    "sifted_bits": 2086,
+    "qber": 0.0
+  }
+}

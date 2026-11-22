@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum-Secured Federated Learning for IoT Networks | Research Prototype & Dashboard</title>
+  <meta name="description" content="Interactive research dashboard and prototype for integrating quantum computing (E91 QKD, Bell state, CHSH) with federated learning (FedAvg) and AES-256-GCM encryption for enhanced security and privacy in IoT networks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
+
+  <!-- Main Application Wrapper -->
+  <div id="app" class="app-layout">
+    
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="header-branding">
+        <div class="logo-mark">
+          <svg class="atom-icon" viewBox="0 0 48 48" fill="none">
+            <ellipse cx="24" cy="24" rx="20" ry="7" stroke="url(#cyan-grad)" stroke-width="2" transform="rotate(0 24 24)"/>
+            <ellipse cx="24" cy="24" rx="20" ry="7" stroke="url(#purple-grad)" stroke-width="2" transform="rotate(60 24 24)"/>
+            <ellipse cx="24" cy="24" rx="20" ry="7" stroke="url(#cyan-grad)" stroke-width="2" transform="rotate(120 24 24)"/>
+            <circle cx="24" cy="24" r="4.5" fill="url(#core-grad)"/>
+            <defs>
+              <linearGradient id="cyan-grad" x1="0" y1="0" x2="48" y2="48">
+                <stop offset="0%" stop-color="#00f5ff"/>
+                <stop offset="100%" stop-color="#0070f3"/>
+              </linearGradient>
+              <linearGradient id="purple-grad" x1="0" y1="0" x2="48" y2="48">
+                <stop offset="0%" stop-color="#a855f7"/>
+                <stop offset="100%" stop-color="#ec4899"/>
+              </linearGradient>
+              <linearGradient id="core-grad" x1="20" y1="20" x2="28" y2="28">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#00f5ff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <span class="brand-name">Quantum FL-IoT</span>
+            <span class="badge badge-quantum">E91 + FedAvg</span>
+            <span class="badge badge-crypto">AES-256-GCM</span>
+          </div>
+          <p class="brand-subtitle">Integrating Quantum Computing with Federated Learning for IoT Security</p>
+        </div>
+      </div>
+
+      <!-- Right Header Status Controls -->
+      <div class="header-actions">
+        <a href="https://doi.org/10.1016/j.rineng.2025.108500" target="_blank" rel="noopener noreferrer" class="paper-link-btn" title="View published research paper in Results in Engineering (Elsevier)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Research Paper (RINENG 2025)</span>
+        </a>
+
+        <div class="status-indicator-pill" id="backendStatusPill">
+          <span class="status-dot pulsating"></span>
+          <span class="status-label" id="backendStatusText">Connecting...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs Bar -->
+    <nav class="nav-tabs-bar" role="tablist">
+      <button class="nav-tab active" id="tabBtnArchitecture" data-tab="tab-architecture">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="8" rx="2"></rect>
+          <rect x="2" y="14" width="20" height="8" rx="2"></rect>
+          <line x1="6" y1="6" x2="6.01" y2="6"></line>
+          <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </svg>
+        <span>Architecture & Overview</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnQuantum" data-tab="tab-quantum">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <span>E91 QKD & Bell Lab</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnFederated" data-tab="tab-federated">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Federated Learning Studio</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnThreats" data-tab="tab-threats">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <path d="M12 8v4"></path>
+          <path d="M12 16h.01"></path>
+        </svg>
+        <span>Eavesdropping & Noise Analysis</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnCrypto" data-tab="tab-crypto">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Crypto & Payload Inspector</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnBenchmarks" data-tab="tab-benchmarks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Model Comparison & Baselines</span>
+      </button>
+
+      <button class="nav-tab" id="tabBtnRobust" data-tab="tab-robust">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <path d="M9 12l2 2 4-4"></path>
+        </svg>
+        <span>Robust Aggregation & Defense</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="app-main-content">
+
+      <!-- ================= TAB 1: ARCHITECTURE & OVERVIEW ================= -->
+      <section id="tab-architecture" class="tab-pane active" role="tabpanel">
+        
+        <!-- Hero Summary Banner -->
+        <div class="hero-banner glass-card">
+          <div class="hero-text-content">
+            <div class="research-tag">Published Research Implementation</div>
+            <h1 class="hero-heading">Integrating Quantum Computing with Federated Learning for Enhanced Security and Privacy in IoT Networks</h1>
+            <p class="hero-lead">
+              A high-assurance architecture combining <strong>E91 Entangled-Photon Quantum Key Distribution (QKD)</strong>, 
+              <strong>CHSH Bell-inequality verification</strong>, <strong>AES-256-GCM authenticated encryption</strong>, 
+              and <strong>Federated Averaging (FedAvg)</strong> across decentralized IoT sensor nodes.
+            </p>
+            <div class="hero-stats-row">
+              <div class="stat-box">
+                <span class="stat-number">2.828</span>
+                <span class="stat-label">Ideal CHSH Score (S &gt; 2.0)</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-number">256-bit</span>
+                <span class="stat-label">Post-QKD Session Key (SHA-256)</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-number">4 - 5</span>
+                <span class="stat-label">IoT Edge Clients (IID &amp; Non-IID)</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-number">&lt; 11%</span>
+                <span class="stat-label">Max QBER Security Boundary</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-side-badge">
+            <div class="singlet-equation">
+              <span class="eq-title">Bell Singlet State</span>
+              <code>|&Psi;&minus;&rang; = (|01&rang; &minus; |10&rang;) / &radic;2</code>
+            </div>
+            <div class="singlet-equation">
+              <span class="eq-title">CHSH Inequality</span>
+              <code>S = |E(a1,b1) + E(a1,b2) + E(a2,b1) &minus; E(a2,b2)|</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-Layer Architecture Interactive Pipeline -->
+        <div class="section-title-row">
+          <h2>System Architecture Pipeline</h2>
+          <p>End-to-end dataflow from quantum photon entanglement down to IoT gradient aggregation</p>
+        </div>
+
+        <div class="pipeline-grid">
+          <!-- Layer 1 -->
+          <div class="pipeline-card layer-quantum glass-card">
+            <div class="layer-number">01</div>
+            <div class="layer-header">
+              <div class="layer-icon quantum-glow">⚛</div>
+              <div>
+                <h3>Quantum Entanglement Layer</h3>
+                <span class="layer-sub">E91 Protocol &amp; Bell State</span>
+              </div>
+            </div>
+            <ul class="layer-features">
+              <li><strong>Singlet Preparation:</strong> <code>|00&rang; &rarr; H &rarr; CX &rarr; X &rarr; Z</code> generating <code>|&Psi;&minus;&rang;</code></li>
+              <li><strong>Measurement Operators:</strong> <code>A(&theta;) = cos(2&theta;)Z + sin(2&theta;)X</code> via <code>Ry(&minus;2&theta;)</code> rotation</li>
+              <li><strong>CHSH Validation:</strong> Alice (0&deg;, 45&deg;) vs Bob (22.5&deg;, -22.5&deg;) achieving <code>S &approx; 2.828</code></li>
+              <li><strong>Anti-correlation Sifting:</strong> Bob flips kept raw bit to form matching sifted key material</li>
+            </ul>
+            <div class="layer-footer">
+              <span class="pill-tag">Qiskit Aer 0.17</span>
+              <span class="pill-tag">Bell Theorem</span>
+            </div>
+          </div>
+
+          <!-- Layer 2 -->
+          <div class="pipeline-card layer-crypto glass-card">
+            <div class="layer-number">02</div>
+            <div class="layer-header">
+              <div class="layer-icon crypto-glow">🔐</div>
+              <div>
+                <h3>Cryptographic Transport Layer</h3>
+                <span class="layer-sub">KDF, AES-256-GCM &amp; HMAC</span>
+              </div>
+            </div>
+            <ul class="layer-features">
+              <li><strong>KDF Derivation:</strong> Sifted bitstring transformed into 256-bit symmetric key via SHA-256</li>
+              <li><strong>Authenticated Encryption:</strong> AES-256 in Galois/Counter Mode (GCM) with 96-bit random IV</li>
+              <li><strong>Contextual Binding:</strong> Associated Data (AAD) binds <code>client_id:round</code> preventing replay attacks</li>
+              <li><strong>Message Authentication:</strong> HMAC-SHA256 ensures cryptographic non-repudiation</li>
+            </ul>
+            <div class="layer-footer">
+              <span class="pill-tag">PyCryptodome</span>
+              <span class="pill-tag">Zero-Leakage</span>
+            </div>
+          </div>
+
+          <!-- Layer 3 -->
+          <div class="pipeline-card layer-edge glass-card">
+            <div class="layer-number">03</div>
+            <div class="layer-header">
+              <div class="layer-icon edge-glow">📡</div>
+              <div>
+                <h3>IoT Edge Nodes &amp; Training</h3>
+                <span class="layer-sub">Decentralized Machine Learning</span>
+              </div>
+            </div>
+            <ul class="layer-features">
+              <li><strong>Edge Partitions:</strong> Distributed across 4 or 5 IoT client nodes with local private datasets</li>
+              <li><strong>Heterogeneity:</strong> Supports both standard IID and severe non-IID label-skew splits</li>
+              <li><strong>Local Optimization:</strong> Gradient descent on local features without transmitting raw sensor data</li>
+              <li><strong>Model Payload:</strong> Client model weights and biases serialized and encrypted before transit</li>
+            </ul>
+            <div class="layer-footer">
+              <span class="pill-tag">Edge Computing</span>
+              <span class="pill-tag">Data Privacy</span>
+            </div>
+          </div>
+
+          <!-- Layer 4 -->
+          <div class="pipeline-card layer-server glass-card">
+            <div class="layer-number">04</div>
+            <div class="layer-header">
+              <div class="layer-icon server-glow">🧠</div>
+              <div>
+                <h3>Federated Aggregation Server</h3>
+                <span class="layer-sub">FedAvg &amp; Global Convergence</span>
+              </div>
+            </div>
+            <ul class="layer-features">
+              <li><strong>Secure Receipt:</strong> Validates HMAC signature, decrypts model update, checks AAD integrity</li>
+              <li><strong>FedAvg Algorithm:</strong> Computes weighted average of client weights proportional to sample counts</li>
+              <li><strong>Global Update:</strong> Dispatches updated model parameters back to edge nodes</li>
+              <li><strong>Evaluation:</strong> Evaluates accuracy, precision, recall, and F1 on hold-out validation set</li>
+            </ul>
+            <div class="layer-footer">
+              <span class="pill-tag">FedAvg</span>
+              <span class="pill-tag">MQTT Transport</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Research Paper Highlights Card -->
+        <div class="paper-citation-card glass-card">
+          <div class="citation-header">
+            <span class="journal-badge">Elsevier Results in Engineering</span>
+            <span class="doi-text">DOI: 10.1016/j.rineng.2025.108500</span>
+          </div>
+          <h3>Scientific Abstract &amp; Contribution</h3>
+          <p class="abstract-body">
+            The rapid proliferation of IoT edge devices introduces critical vulnerabilities during distributed intelligence workflows. 
+            Standard Federated Learning leaves model gradients susceptible to eavesdropping, parameter inversion, and poisoning attacks. 
+            This research presents an integrated post-quantum architecture utilizing Ekert 91 (E91) quantum entanglement to generate shared 
+            keys with eavesdropper detection via CHSH Bell violations. Coupled with authenticated AES-256-GCM encryption, the prototype maintains 
+            high FL model accuracy (85.0% F1-score) while enforcing zero information leakage across untrusted communication channels.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 2: QUANTUM E91 & BELL LAB ================= -->
+      <section id="tab-quantum" class="tab-pane" role="tabpanel">
+        
+        <div class="two-column-layout">
+          <!-- Left Column: Controls and Simulation Parameters -->
+          <div class="control-panel glass-card">
+            <div class="panel-header">
+              <h3>E91 Protocol Generator</h3>
+              <span class="badge badge-quantum">Singlet State</span>
+            </div>
+            
+            <form id="e91Form" class="control-form" onsubmit="return false;">
+              <div class="form-group">
+                <label for="e91Rounds">EPR Pairs / Rounds to Transmit:</label>
+                <div class="range-with-value">
+                  <input type="range" id="e91Rounds" min="200" max="10000" step="200" value="2000">
+                  <span class="range-display" id="e91RoundsVal">2,000</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="e91KeyAngle">Key Basis Angle (Degrees):</label>
+                <div class="select-pill-group" id="e91KeyAngleGroup">
+                  <button type="button" class="pill-choice active" data-angle="0.0">0&deg; / 45&deg; (Standard)</button>
+                  <button type="button" class="pill-choice" data-angle="90.0">90&deg; / 45&deg;</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="e91EveProb">Eve Eavesdropping Probability:</label>
+                <div class="range-with-value">
+                  <input type="range" id="e91EveProb" min="0" max="1" step="0.05" value="0.0">
+                  <span class="range-display warning-highlight" id="e91EveProbVal">0.0% (Clean Channel)</span>
+                </div>
+                <small class="form-hint">Eavesdropper intercepts EPR qubits and resends randomized states.</small>
+              </div>
+
+              <div class="button-row">
+                <button type="button" class="btn btn-primary" id="btnRunE91">
+                  <span class="btn-icon">⚡</span> Run E91 Simulation
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnRunChshCircuit">
+                  <span class="btn-icon">⚛</span> Verify CHSH Bell Circuit
+                </button>
+              </div>
+            </form>
+
+            <!-- CHSH Gauge Card -->
+            <div class="chsh-card">
+              <h4>CHSH Entanglement Metric (S)</h4>
+              <div class="gauge-container">
+                <div class="gauge-bar-wrapper">
+                  <div class="gauge-track"></div>
+                  <div class="gauge-marker marker-classical" style="left: 50%;" title="Classical Limit = 2.0">
+                    <span>2.0 (Classical)</span>
+                  </div>
+                  <div class="gauge-marker marker-quantum" style="left: 70.7%;" title="Quantum Limit = 2.828">
+                    <span>2.828 (2&radic;2)</span>
+                  </div>
+                  <div class="gauge-fill" id="chshGaugeFill" style="width: 70%;"></div>
+                </div>
+                <div class="gauge-value-row">
+                  <span class="gauge-number" id="chshScoreVal">2.828</span>
+                  <span class="gauge-status badge-success" id="chshStatusBadge">Violation Confirmed (S &gt; 2.0)</span>
+                </div>
+              </div>
+              <div class="correlation-subgrid">
+                <div class="corr-item"><span>E(a1,b1):</span> <strong id="e11Val">-0.707</strong></div>
+                <div class="corr-item"><span>E(a1,b2):</span> <strong id="e12Val">-0.707</strong></div>
+                <div class="corr-item"><span>E(a2,b1):</span> <strong id="e21Val">-0.707</strong></div>
+                <div class="corr-item"><span>E(a2,b2):</span> <strong id="e22Val">+0.707</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Sifting Matrix and Key Visualizer -->
+          <div class="results-panel glass-card">
+            <div class="panel-header">
+              <h3>QKD Basis Sifting &amp; Key Extraction</h3>
+              <div class="qber-badge" id="qberBadge">
+                <span>QBER:</span> <strong id="qberDisplay">0.00%</strong>
+              </div>
+            </div>
+
+            <!-- Key Summary Metrics -->
+            <div class="metrics-mini-grid">
+              <div class="mini-metric">
+                <span class="mini-label">Transmitted Pairs</span>
+                <span class="mini-val" id="miniTotalPairs">2,000</span>
+              </div>
+              <div class="mini-metric">
+                <span class="mini-label">Sifted Key Bits</span>
+                <span class="mini-val" id="miniSiftedBits">1,024</span>
+              </div>
+              <div class="mini-metric">
+                <span class="mini-label">Sifting Efficiency</span>
+                <span class="mini-val" id="miniSiftEfficiency">51.2%</span>
+              </div>
+              <div class="mini-metric">
+                <span class="mini-label">Security Condition</span>
+                <span class="mini-val text-success" id="miniSecurityCondition">Secure (QBER &lt; 11%)</span>
+              </div>
+            </div>
+
+            <!-- Visual Sifting Event Stream -->
+            <div class="matrix-section">
+              <div class="matrix-title-row">
+                <h4>Live Quantum Measurement Event Stream</h4>
+                <span class="matrix-legend">
+                  <span class="legend-dot dot-match"></span> Matching Basis
+                  <span class="legend-dot dot-error"></span> QBER Mismatch
+                </span>
+              </div>
+
+              <div class="table-container matrix-table-container">
+                <table class="quantum-matrix-table" id="matrixTable">
+                  <thead>
+                    <tr>
+                      <th>Pair #</th>
+                      <th>Alice Angle</th>
+                      <th>Alice Raw</th>
+                      <th>Bob Angle</th>
+                      <th>Bob Raw</th>
+                      <th>Match?</th>
+                      <th>Bob Inverted</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="matrixTableBody">
+                    <!-- Populated dynamically by app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Derived Key Bitstream Preview -->
+            <div class="key-preview-box">
+              <div class="key-preview-header">
+                <span>Sifted Key Bitstream Preview (First 64 Bits)</span>
+                <button class="copy-btn" id="btnCopyKey" title="Copy raw bits">Copy Bits</button>
+              </div>
+              <div class="bit-chips-container" id="bitChipsContainer">
+                <!-- Bit chips rendered here -->
+              </div>
+            </div>
+
+            <!-- SHA-256 Derived Session Key -->
+            <div class="derived-session-box">
+              <div class="session-label">Derived 256-bit Session Key (SHA-256 KDF):</div>
+              <code class="session-key-hex" id="sessionKeyHexDisplay">a4f89d31... (Awaiting E91 Execution)</code>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 3: FEDERATED LEARNING STUDIO ================= -->
+      <section id="tab-federated" class="tab-pane" role="tabpanel">
+        
+        <div class="two-column-layout">
+          <!-- Left Column: FL Training Controls -->
+          <div class="control-panel glass-card">
+            <div class="panel-header">
+              <h3>Federated Learning Controls</h3>
+              <span class="badge badge-crypto">FedAvg Optimizer</span>
+            </div>
+
+            <!-- Hospital Dataset Ingestion & Upload Box -->
+            <div class="dataset-upload-card" id="datasetUploadSection">
+              <div class="dataset-header-row">
+                <div class="dataset-badge-title">
+                  <span class="dataset-icon">🏥</span>
+                  <div>
+                    <h4>Hospital Clinical Dataset Ingestion</h4>
+                    <span class="dataset-sub">Train AI on Real Hospital Telemetry (CSV)</span>
+                  </div>
+                </div>
+                <span class="pill-tag pill-success" id="datasetStatusTag">Active: 600 Patients</span>
+              </div>
+
+              <div class="dataset-metrics-mini">
+                <div class="data-stat">
+                  <span class="lbl">Loaded File:</span>
+                  <strong id="loadedFileName">hospital_data.csv</strong>
+                </div>
+                <div class="data-stat">
+                  <span class="lbl">Total Patients:</span>
+                  <strong id="loadedPatientCount">600</strong>
+                </div>
+                <div class="data-stat">
+                  <span class="lbl">Clinical Features:</span>
+                  <strong id="loadedFeatureCount">8 Features</strong>
+                </div>
+              </div>
+
+              <!-- Upload Form / Dropzone -->
+              <div class="upload-dropzone" id="hospitalDropzone">
+                <input type="file" id="hospitalCsvInput" accept=".csv" class="hidden-file-input">
+                <div class="dropzone-content">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span>Drop your Hospital CSV here or <label for="hospitalCsvInput" class="browse-link">Browse</label></span>
+                  <span class="dropzone-hint">Format: 8 features (age, bp, chol, hr, glucose, st_dep, spo2, bmi) + 1 target (0/1)</span>
+                </div>
+              </div>
+
+              <div class="upload-actions-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnUploadCsv">
+                  <span>⬆ Upload Custom Hospital CSV</span>
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" id="btnPreviewData">
+                  <span>👁 View Patient Samples</span>
+                </button>
+              </div>
+
+              <div id="uploadAlertMsg" class="upload-alert" style="display:none;"></div>
+
+              <!-- Collapsible Preview Table -->
+              <div id="previewTableContainer" class="preview-table-box" style="display:none;">
+                <div class="preview-header">
+                  <h5>First 5 Ingested Patient Records</h5>
+                  <button type="button" class="close-preview-btn" id="btnClosePreview">&times;</button>
+                </div>
+                <div class="table-container small-table">
+                  <table class="quantum-matrix-table" id="datasetPreviewTable">
+                    <thead>
+                      <tr>
+                        <th>Age</th><th>BP</th><th>Chol</th><th>MaxHR</th><th>Glucose</th><th>ST-Dep</th><th>SpO2</th><th>BMI</th><th>Risk</th>
+                      </tr>
+                    </thead>
+                    <tbody id="datasetPreviewTbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <form id="flForm" class="control-form" onsubmit="return false;">
+              <div class="form-group">
+                <label>Training Dataset Source:</label>
+                <div class="select-pill-group" id="flDatasetSourceGroup">
+                  <button type="button" class="pill-choice active" data-source="hospital">🏥 Hospital Clinical CSV</button>
+                  <button type="button" class="pill-choice" data-source="synthetic">📡 Synthetic IoT Benchmark</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="flClientCount">Participating IoT Edge Clients:</label>
+                <div class="select-pill-group" id="flClientCountGroup">
+                  <button type="button" class="pill-choice" data-clients="4">4 Clients</button>
+                  <button type="button" class="pill-choice active" data-clients="5">5 Clients</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="flRounds">Training Rounds:</label>
+                <div class="range-with-value">
+                  <input type="range" id="flRounds" min="1" max="10" step="1" value="5">
+                  <span class="range-display" id="flRoundsVal">5 Rounds</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Security &amp; Encryption Mode:</label>
+                <div class="toggle-option-box active" id="flSecureToggle">
+                  <input type="checkbox" id="flSecureCheck" checked>
+                  <div class="toggle-text">
+                    <strong>Quantum-Secured Mode (Recommended)</strong>
+                    <span>E91 QKD session key + AES-256-GCM + HMAC-SHA256 signature</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Data Distribution:</label>
+                <div class="radio-card-group">
+                  <label class="radio-card active" id="lblIid">
+                    <input type="radio" name="dataDist" value="iid" checked>
+                    <div class="radio-content">
+                      <strong>IID (Identically Distributed)</strong>
+                      <span>Uniform sample partitioning across nodes</span>
+                    </div>
+                  </label>
+                  <label class="radio-card" id="lblNonIid">
+                    <input type="radio" name="dataDist" value="non_iid">
+                    <div class="radio-content">
+                      <strong>Non-IID (Label-Skewed)</strong>
+                      <span>Real-world heterogeneous IoT sensor bias</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="button-row">
+                <button type="button" class="btn btn-primary" id="btnTrainFL">
+                  <span class="btn-icon">▶</span> Start Federated Training
+                </button>
+              </div>
+            </form>
+
+            <!-- Client Node Information Cards -->
+            <div class="client-cards-container">
+              <h4>IoT Edge Node Sensor Topology</h4>
+              <div class="clients-list" id="clientsListContainer">
+                <!-- Dynamically generated client nodes -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Training Visualizer & Convergence Curves -->
+          <div class="results-panel glass-card">
+            <div class="panel-header">
+              <h3>Model Convergence &amp; Communication Metrics</h3>
+              <div class="round-counter-pill" id="flRoundCounter">
+                <span>Status:</span> <strong id="flTrainingStatusText">Ready</strong>
+              </div>
+            </div>
+
+            <!-- Real-time Training Convergence Canvas Chart -->
+            <div class="chart-wrapper">
+              <div class="chart-header">
+                <h4>Validation Accuracy &amp; F1-Score vs Rounds</h4>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-color-box col-acc"></span> Accuracy</span>
+                  <span class="legend-item"><span class="legend-color-box col-f1"></span> F1-Score</span>
+                </div>
+              </div>
+              <div class="canvas-container">
+                <canvas id="flConvergenceCanvas" width="600" height="260"></canvas>
+              </div>
+            </div>
+
+            <!-- Training Round Details Table -->
+            <div class="fl-rounds-table-section">
+              <h4>Round-by-Round Execution Telemetry</h4>
+              <div class="table-container">
+                <table class="quantum-matrix-table" id="flRoundsTable">
+                  <thead>
+                    <tr>
+                      <th>Round</th>
+                      <th>Accuracy</th>
+                      <th>Precision</th>
+                      <th>Recall</th>
+                      <th>F1-Score</th>
+                      <th>Payload Size</th>
+                      <th>Encrypt Latency</th>
+                      <th>Total Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="flRoundsTableBody">
+                    <tr>
+                      <td colspan="8" class="text-center text-muted">Click "Start Federated Training" to execute rounds</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Summary KPI Strip -->
+            <div class="kpi-strip">
+              <div class="kpi-item">
+                <span class="kpi-label">Final Accuracy</span>
+                <span class="kpi-value text-accent" id="kpiFinalAccuracy">--</span>
+              </div>
+              <div class="kpi-item">
+                <span class="kpi-label">Final F1-Score</span>
+                <span class="kpi-value text-purple" id="kpiFinalF1">--</span>
+              </div>
+              <div class="kpi-item">
+                <span class="kpi-label">Total Transferred</span>
+                <span class="kpi-value text-cyan" id="kpiTotalBytes">--</span>
+              </div>
+              <div class="kpi-item">
+                <span class="kpi-label">Avg Encrypt Latency</span>
+                <span class="kpi-value text-emerald" id="kpiAvgEncrypt">--</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 4: EAVESDROPPING & NOISE ANALYSIS ================= -->
+      <section id="tab-threats" class="tab-pane" role="tabpanel">
+        
+        <div class="threat-grid">
+          <!-- Card 1: Eavesdropping Sweep Interactive -->
+          <div class="threat-card glass-card">
+            <div class="panel-header">
+              <h3>Eve Eavesdropping Intercept Attack Simulation</h3>
+              <span class="badge badge-warning">Quantum Channel Attack</span>
+            </div>
+            <p class="card-desc">
+              Examines QBER progression as an eavesdropper intercepts EPR pairs with probability $P_{\text{eve}} \in [0, 1.0]$. 
+              When $QBER &gt; 11\%$, the quantum protocol immediately aborts key distribution.
+            </p>
+
+            <div class="canvas-container-threat">
+              <canvas id="eveAttackCanvas" width="560" height="260"></canvas>
+            </div>
+
+            <div class="threat-action-row">
+              <button class="btn btn-secondary" id="btnRunEveSweep">
+                <span>⚡</span> Run Full Eavesdropping Sweep (0% to 100%)
+              </button>
+            </div>
+
+            <div class="security-callout alert-warning" id="eveCallout">
+              <strong>Shor-Preskill / E91 Threshold:</strong> 
+              At $P_{\text{eve}} \ge 0.25$, QBER reaches 12.5%, breaching the tolerable security margin and alerting Alice and Bob to discontinue transmission.
+            </div>
+          </div>
+
+          <!-- Card 2: Quantum Depolarizing Noise Sweep -->
+          <div class="threat-card glass-card">
+            <div class="panel-header">
+              <h3>Quantum Channel Depolarizing Noise Analysis</h3>
+              <span class="badge badge-quantum">Qiskit Aer Noise Model</span>
+            </div>
+            <p class="card-desc">
+              Evaluates the degradation of the CHSH Bell correlation score $S$ under increasing quantum gate depolarizing noise. 
+              $S$ decays from the ideal $2\sqrt{2} \approx 2.828$ toward the classical boundary of $2.0$.
+            </p>
+
+            <div class="canvas-container-threat">
+              <canvas id="noiseSweepCanvas" width="560" height="260"></canvas>
+            </div>
+
+            <div class="threat-action-row">
+              <button class="btn btn-secondary" id="btnRunNoiseSweep">
+                <span>⚛</span> Run Qiskit Noise Sweep
+              </button>
+            </div>
+
+            <div class="security-callout alert-info" id="noiseCallout">
+              <strong>Entanglement Robustness:</strong> 
+              The Bell singlet state maintains a provable quantum correlation violation ($S &gt; 2.0$) up to approximately $1.5\%$ gate depolarizing probability.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 5: CRYPTO & PAYLOAD INSPECTOR ================= -->
+      <section id="tab-crypto" class="tab-pane" role="tabpanel">
+        
+        <div class="crypto-inspector-layout">
+          <!-- Left: Interactive Payload & Tamper Sandbox -->
+          <div class="crypto-sandbox glass-card">
+            <div class="panel-header">
+              <h3>Cryptographic Transport Sandbox</h3>
+              <span class="badge badge-crypto">AES-256-GCM + HMAC</span>
+            </div>
+            <p class="card-desc">
+              Interact with the cryptographic pipeline. Inspect how raw model gradients are packed, encrypted with the quantum-derived key, 
+              and verified with HMAC. Test what happens when an attacker tampers with the ciphertext or signature in-transit!
+            </p>
+
+            <div class="tamper-control-box">
+              <h4>Tamper Simulation Controls</h4>
+              <div class="tamper-buttons">
+                <button type="button" class="btn btn-tamper" id="btnTamperCiphertext">
+                  <span>💥</span> Tamper Ciphertext Bits (Simulate MITM Attack)
+                </button>
+                <button type="button" class="btn btn-tamper" id="btnTamperHmac">
+                  <span>⚠️</span> Alter HMAC Signature
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnResetCrypto">
+                  <span>🔄</span> Reset Clean Payload
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Verification Result Banner -->
+            <div class="verification-banner" id="verificationResultBanner">
+              <div class="verif-icon" id="verifIcon">🛡️</div>
+              <div class="verif-text">
+                <h4 id="verifTitle">Message Intact &amp; Verified</h4>
+                <p id="verifDetails">HMAC-SHA256 signature and AES-256-GCM authentication tags verified successfully. No tampering detected.</p>
+              </div>
+            </div>
+
+            <!-- Wire Payload Details -->
+            <div class="wire-breakdown">
+              <div class="wire-item">
+                <span class="wire-label">Associated Data (AAD):</span>
+                <code id="wireAadDisplay">client1:1</code>
+              </div>
+              <div class="wire-item">
+                <span class="wire-label">AES-GCM Initialization Vector (96-bit IV):</span>
+                <code id="wireIvDisplay">d9a8c7b6...</code>
+              </div>
+              <div class="wire-item">
+                <span class="wire-label">HMAC-SHA256 Signature:</span>
+                <code id="wireHmacDisplay">8b4e72...</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Raw vs Ciphertext vs Decrypted Payloads -->
+          <div class="payload-inspection-panel glass-card">
+            <div class="panel-header">
+              <h3>Payload Payload Dissection</h3>
+              <span class="badge badge-quantum">Wire Format</span>
+            </div>
+
+            <div class="payload-viewer-group">
+              <div class="viewer-block">
+                <span class="viewer-title">1. Plaintext Model Update (Client Gradient &amp; Weights)</span>
+                <pre class="code-preview" id="plainPayloadCode">Loading...</pre>
+              </div>
+
+              <div class="viewer-block">
+                <span class="viewer-title">2. Encrypted Wire Ciphertext (AES-256-GCM Base64)</span>
+                <pre class="code-preview text-cipher" id="cipherPayloadCode">Loading...</pre>
+              </div>
+
+              <div class="viewer-block">
+                <span class="viewer-title">3. Server Decrypted Model State</span>
+                <pre class="code-preview text-decrypted" id="decryptedPayloadCode">Loading...</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 6: MODEL COMPARISON & BASELINES ================= -->
+      <section id="tab-benchmarks" class="tab-pane" role="tabpanel">
+        
+        <div class="benchmark-layout">
+          <!-- Top Comparison Table -->
+          <div class="benchmark-table-card glass-card">
+            <div class="panel-header">
+              <h3>Baseline Model Architecture Comparison</h3>
+              <button class="btn btn-secondary btn-sm" id="btnRefreshBenchmarks">
+                <span>🔄</span> Re-run Comparative Benchmark
+              </button>
+            </div>
+            
+            <div class="table-container">
+              <table class="benchmark-table">
+                <thead>
+                  <tr>
+                    <th>Architecture</th>
+                    <th>Accuracy</th>
+                    <th>F1-Score</th>
+                    <th>Data Privacy</th>
+                    <th>Transport Security</th>
+                    <th>Eve Resistance</th>
+                  </tr>
+                </thead>
+                <tbody id="benchmarkTableBody">
+                  <tr class="row-cent">
+                    <td>
+                      <div class="arch-name"><strong>Centralized ML</strong></div>
+                      <small class="text-muted">Single-Server Logistic Classifier</small>
+                    </td>
+                    <td id="bmCentAcc">85.8%</td>
+                    <td id="bmCentF1">87.1%</td>
+                    <td><span class="badge badge-danger">None (Raw Sensor Exfiltration)</span></td>
+                    <td><span class="badge badge-warning">Server Boundary Only</span></td>
+                    <td><span class="badge badge-danger">Vulnerable to Server Breach</span></td>
+                  </tr>
+                  <tr class="row-fl">
+                    <td>
+                      <div class="arch-name"><strong>Standard Federated Learning</strong></div>
+                      <small class="text-muted">5-Client Decentralized FedAvg</small>
+                    </td>
+                    <td id="bmFlAcc">85.0%</td>
+                    <td id="bmFlF1">86.8%</td>
+                    <td><span class="badge badge-success">High (Local Data Preservation)</span></td>
+                    <td><span class="badge badge-danger">Plaintext Gradient In-Transit</span></td>
+                    <td><span class="badge badge-danger">Vulnerable to Gradient Inversion</span></td>
+                  </tr>
+                  <tr class="row-sec-fl highlighted-row">
+                    <td>
+                      <div class="arch-name"><strong>Quantum-Secured FL (Our Solution)</strong></div>
+                      <small class="text-muted">E91 QKD + AES-256-GCM + FedAvg</small>
+                    </td>
+                    <td id="bmSecAcc" class="text-accent">85.0%</td>
+                    <td id="bmSecF1" class="text-accent">86.8%</td>
+                    <td><span class="badge badge-success">High (Local Data Preservation)</span></td>
+                    <td><span class="badge badge-success">AES-256-GCM + HMAC Authentication</span></td>
+                    <td><span class="badge badge-success">Provable QBER Eavesdrop Abort</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom: Overhead and Tradeoff Cards -->
+          <div class="benchmark-subgrid">
+            <div class="sub-card glass-card">
+              <h4>Computational Overhead Tradeoff</h4>
+              <p>
+                The cryptographic overhead of AES-256-GCM authenticated encryption adds less than 
+                <strong>0.15 milliseconds</strong> per round per client, making quantum-secured FL highly practical for battery-constrained IoT devices.
+              </p>
+              <div class="overhead-bar-group">
+                <div class="overhead-item">
+                  <span class="overhead-name">Local Model Training</span>
+                  <div class="overhead-bar-track">
+                    <div class="overhead-bar-fill" style="width: 88%;"></div>
+                  </div>
+                  <span class="overhead-val">88.5% of cycle</span>
+                </div>
+                <div class="overhead-item">
+                  <span class="overhead-name">AES-256-GCM Encryption</span>
+                  <div class="overhead-bar-track">
+                    <div class="overhead-bar-fill fill-crypto" style="width: 7%;"></div>
+                  </div>
+                  <span class="overhead-val">6.8% of cycle</span>
+                </div>
+                <div class="overhead-item">
+                  <span class="overhead-name">HMAC Signing &amp; Verification</span>
+                  <div class="overhead-bar-track">
+                    <div class="overhead-bar-fill fill-hmac" style="width: 5%;"></div>
+                  </div>
+                  <span class="overhead-val">4.7% of cycle</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sub-card glass-card">
+              <h4>Key Scientific Takeaways</h4>
+              <ul class="takeaway-list">
+                <li>
+                  <strong>No Accuracy Penalty:</strong> Encryption and authenticated packaging introduce exactly 0% distortion or degradation to the FedAvg model convergence.
+                </li>
+                <li>
+                  <strong>Information-Theoretic Security Boundary:</strong> Intercept-resend eavesdropping creates mandatory QBER disturbance, enabling 100% detection before payload decryption.
+                </li>
+                <li>
+                  <strong>Scalable to Complex IoT Topologies:</strong> Demonstrated on both 4 and 5 client networks with balanced IID and skewed non-IID partition sets.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 7: ROBUST AGGREGATION & BYZANTINE DEFENSE ================= -->
+      <section id="tab-robust" class="tab-pane" role="tabpanel">
+        
+        <!-- Header Banner -->
+        <div class="panel-header-card glass-card">
+          <div class="panel-badge-row">
+            <span class="badge badge-purple">Research Extension</span>
+            <span class="badge badge-quantum">Byzantine Fault-Tolerance</span>
+            <span class="badge badge-crypto">Model-Poisoning Mitigation</span>
+          </div>
+          <h2 class="panel-title">Robust Aggregation against Malicious Federated Clients</h2>
+          <p class="panel-lead">
+            Mitigating sign-flip and amplified model-poisoning attacks from authenticated IoT adversaries 
+            using <strong>Coordinate-Wise Median</strong> and <strong>Trimmed Mean</strong>.
+          </p>
+          <div class="callout-box warning-callout">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-body">
+              <strong>Crucial Cybersecurity Insight:</strong> E91 Quantum Key Distribution, AES-256-GCM, and HMAC-SHA256 
+              guarantee confidentiality, message integrity, and sender authentication in-transit. However, they 
+              <em>cannot</em> prevent an authenticated, legitimate insider from submitting an adversarial, poisoned model update. 
+              Robust aggregation provides the essential algorithmic defense layer at the parameter aggregation level.
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid-2col">
+          <!-- Left: Simulation Controls -->
+          <div class="control-panel-card glass-card">
+            <h3 class="card-heading">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Attack & Aggregation Configuration</span>
+            </h3>
+
+            <div class="form-group">
+              <label for="robustMethodSelect">Aggregation Algorithm</label>
+              <select id="robustMethodSelect" class="form-select">
+                <option value="coordinate_median" selected>Coordinate-Wise Median (High Byzantine Resilience)</option>
+                <option value="trimmed_mean">Coordinate Trimmed Mean (Outlier Tail Trimming)</option>
+                <option value="fedavg">Standard FedAvg (Vulnerable Baseline)</option>
+              </select>
+              <span class="field-hint" id="robustMethodDesc">Applies coordinate-wise median to client parameter deltas relative to global model.</span>
+            </div>
+
+            <div class="form-group" id="trimRatioGroup" style="display: none;">
+              <div class="label-with-val">
+                <label for="robustTrimRatio">Trim Ratio (β)</label>
+                <span class="val-pill" id="valRobustTrimRatio">0.20</span>
+              </div>
+              <input type="range" id="robustTrimRatio" min="0.05" max="0.40" step="0.05" value="0.20" class="form-range">
+              <span class="field-hint">Trims ⌊N × β⌋ values from both tails before computing the coordinate mean.</span>
+            </div>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="robustMaliciousSelect">Malicious Clients</label>
+                <select id="robustMaliciousSelect" class="form-select">
+                  <option value="none">0 Malicious (Clean Training)</option>
+                  <option value="client5" selected>1 Malicious (Client 5 - 20%)</option>
+                  <option value="client4_5">2 Malicious (Clients 4 &amp; 5 - 40%)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="robustAttackTypeSelect">Attack Strategy</label>
+                <select id="robustAttackTypeSelect" class="form-select">
+                  <option value="sign_flip" selected>Sign-Flip &amp; Amplification</option>
+                  <option value="random_noise">Gaussian Perturbation</option>
+                  <option value="constant_offset">Constant DC Offset</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-with-val">
+                <label for="robustAttackFactor">Attack Amplification Factor (γ)</label>
+                <span class="val-pill" id="valRobustAttackFactor">3.0x</span>
+              </div>
+              <input type="range" id="robustAttackFactor" min="1.0" max="6.0" step="0.5" value="3.0" class="form-range">
+              <span class="field-hint">Adversary scales update delta: Δ_malicious = -γ × (w_local - w_global).</span>
+            </div>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <div class="label-with-val">
+                  <label for="robustRounds">FL Rounds</label>
+                  <span class="val-pill" id="valRobustRounds">5</span>
+                </div>
+                <input type="range" id="robustRounds" min="3" max="8" step="1" value="5" class="form-range">
+              </div>
+
+              <div class="form-group">
+                <label>Data Partition</label>
+                <div class="radio-pill-group">
+                  <label class="radio-pill active" id="pillIid">
+                    <input type="radio" name="robustPart" value="iid" checked> IID
+                  </label>
+                  <label class="radio-pill" id="pillNonIid">
+                    <input type="radio" name="robustPart" value="non_iid"> Non-IID
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons-row">
+              <button id="btnRunRobustExperiment" class="btn btn-primary btn-glow">
+                <span class="btn-spinner" id="robustSpinner" style="display: none;"></span>
+                <span>Run Interactive Simulation</span>
+              </button>
+              <button id="btnLoadRobustBenchmark" class="btn btn-secondary">
+                <span>View Full Sweep Results</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Live Evaluation Metrics -->
+          <div class="results-panel-card glass-card">
+            <h3 class="card-heading">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              <span>Live Defense Performance Metrics</span>
+            </h3>
+
+            <!-- Metrics Quad Grid -->
+            <div class="stats-quad-grid">
+              <div class="stat-card">
+                <span class="stat-label">Model Accuracy</span>
+                <span class="stat-value text-accent" id="resRobustAccuracy">83.3%</span>
+                <span class="stat-caption" id="resRobustStatus">Under Active Defense</span>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">Clean Baseline</span>
+                <span class="stat-value text-emerald" id="resRobustCleanAcc">85.0%</span>
+                <span class="stat-caption">Unattacked FedAvg</span>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">Accuracy Degradation</span>
+                <span class="stat-value text-amber" id="resRobustDegradation">-1.7%</span>
+                <span class="stat-caption">Clean Acc - Model Acc</span>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">Robustness Improvement</span>
+                <span class="stat-value text-cyan" id="resRobustImprovement">+3.3%</span>
+                <span class="stat-caption">Model Acc - Attacked FedAvg</span>
+              </div>
+            </div>
+
+            <!-- Confusion Matrix Card -->
+            <div class="sub-card glass-card" style="margin-top: 1rem;">
+              <h4 style="margin-bottom: 0.5rem; font-size: 0.95rem;">Test Set Confusion Matrix &amp; Timing</h4>
+              <div class="cm-grid">
+                <div class="cm-cell"><span class="cm-title">True Positive:</span> <strong id="cmTp">58</strong></div>
+                <div class="cm-cell"><span class="cm-title">False Positive:</span> <strong id="cmFp">18</strong></div>
+                <div class="cm-cell"><span class="cm-title">False Negative:</span> <strong id="cmFn">2</strong></div>
+                <div class="cm-cell"><span class="cm-title">True Negative:</span> <strong id="cmTn">42</strong></div>
+              </div>
+              <div style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                <span>F1-Score: <strong id="resRobustF1" style="color: var(--text-primary);">0.853</strong></span>
+                <span>Mean Aggregation Overhead: <strong id="resRobustAggTime" style="color: var(--text-primary);">0.21 ms</strong></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Round-by-Round Trajectory Table -->
+        <div class="glass-card" style="margin-top: 1.5rem;">
+          <h3 class="card-heading" style="margin-bottom: 1rem;">
+            <span>Round-by-Round Defense Trajectory</span>
+          </h3>
+          <div class="table-container">
+            <table class="data-table" id="tableRobustTrajectory">
+              <thead>
+                <tr>
+                  <th>Round</th>
+                  <th>Aggregator</th>
+                  <th>Model Accuracy</th>
+                  <th>Clean Baseline</th>
+                  <th>F1-Score</th>
+                  <th>Malicious Status</th>
+                  <th>Mean Train Time</th>
+                  <th>Aggregation Time</th>
+                </tr>
+              </thead>
+              <tbody id="robustTrajectoryBody">
+                <tr>
+                  <td>Round 1</td>
+                  <td>Coordinate Median</td>
+                  <td><span class="badge badge-emerald">83.3%</span></td>
+                  <td>83.3%</td>
+                  <td>0.855</td>
+                  <td><span class="badge badge-purple">1 Malicious (Sign-Flip)</span></td>
+                  <td>4.5 ms</td>
+                  <td>0.18 ms</td>
+                </tr>
+                <tr>
+                  <td>Round 2</td>
+                  <td>Coordinate Median</td>
+                  <td><span class="badge badge-emerald">83.3%</span></td>
+                  <td>84.2%</td>
+                  <td>0.855</td>
+                  <td><span class="badge badge-purple">1 Malicious (Sign-Flip)</span></td>
+                  <td>4.6 ms</td>
+                  <td>0.19 ms</td>
+                </tr>
+                <tr>
+                  <td>Round 3</td>
+                  <td>Coordinate Median</td>
+                  <td><span class="badge badge-emerald">83.3%</span></td>
+                  <td>84.2%</td>
+                  <td>0.855</td>
+                  <td><span class="badge badge-purple">1 Malicious (Sign-Flip)</span></td>
+                  <td>4.8 ms</td>
+                  <td>0.21 ms</td>
+                </tr>
+                <tr>
+                  <td>Round 4</td>
+                  <td>Coordinate Median</td>
+                  <td><span class="badge badge-emerald">83.3%</span></td>
+                  <td>85.0%</td>
+                  <td>0.855</td>
+                  <td><span class="badge badge-purple">1 Malicious (Sign-Flip)</span></td>
+                  <td>4.7 ms</td>
+                  <td>0.22 ms</td>
+                </tr>
+                <tr>
+                  <td>Round 5</td>
+                  <td>Coordinate Median</td>
+                  <td><span class="badge badge-emerald">83.3%</span></td>
+                  <td>85.0%</td>
+                  <td>0.855</td>
+                  <td><span class="badge badge-purple">1 Malicious (Sign-Flip)</span></td>
+                  <td>4.7 ms</td>
+                  <td>0.22 ms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Research Paper Benchmark Sweep Visualizations -->
+        <div class="dashboard-grid-2col" style="margin-top: 1.5rem;">
+          <div class="glass-card">
+            <h3 class="card-heading">
+              <span>Model Poisoning Convergence (Figure 6)</span>
+            </h3>
+            <p class="field-hint" style="margin-bottom: 0.75rem;">
+              Generated from reproducible experiment: Clean FedAvg vs Attacked FedAvg vs Coordinate Median vs Trimmed Mean.
+            </p>
+            <div style="text-align: center;">
+              <img src="/results/figures/robust_aggregation_poisoning.png" alt="Model Poisoning Defense Convergence" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3 class="card-heading">
+              <span>Byzantine Resilience Breakdown (Figure 7)</span>
+            </h3>
+            <p class="field-hint" style="margin-bottom: 0.75rem;">
+              Performance under increasing adversary fractions: 0/5 (0%), 1/5 (20%), and 2/5 (40%).
+            </p>
+            <div style="text-align: center;">
+              <img src="/results/figures/malicious_fraction_impact.png" alt="Malicious Fraction Impact" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            </div>
+          </div>
+        </div>
+
+        <!-- Theoretical Resilience & Breakdown Points Table -->
+        <div class="glass-card" style="margin-top: 1.5rem;">
+          <h3 class="card-heading" style="margin-bottom: 0.75rem;">
+            <span>Theoretical Breakdown Points &amp; Security Analysis</span>
+          </h3>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Aggregation Method</th>
+                  <th>Theoretical Byzantine Tolerance</th>
+                  <th>Under 1 Attacker (20%)</th>
+                  <th>Under 2 Attackers (40%)</th>
+                  <th>Clean Data Utility Loss</th>
+                  <th>Computational Complexity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Standard FedAvg</strong></td>
+                  <td><span class="badge badge-danger">0% (f = 0)</span></td>
+                  <td><span class="badge badge-danger">Collapsed (Accuracy drops to 80% or below)</span></td>
+                  <td><span class="badge badge-danger">Completely Broken (22.5%)</span></td>
+                  <td>0.0% (Optimal for clean data)</td>
+                  <td>O(N · d)</td>
+                </tr>
+                <tr>
+                  <td><strong>Trimmed Mean (β = 0.2)</strong></td>
+                  <td>f ≤ ⌊N · β⌋ (1 client for N=5)</td>
+                  <td><span class="badge badge-emerald">Robust (83.3% Accuracy)</span></td>
+                  <td><span class="badge badge-danger">Overwhelmed (22.5% when 2 > ⌊5·0.2⌋)</span></td>
+                  <td>&lt; 1.0%</td>
+                  <td>O(N log N · d)</td>
+                </tr>
+                <tr>
+                  <td><strong>Coordinate-Wise Median</strong></td>
+                  <td><span class="badge badge-emerald">f &lt; N/2 (Up to 40% for N=5)</span></td>
+                  <td><span class="badge badge-emerald">Robust (83.3% Accuracy)</span></td>
+                  <td><span class="badge badge-emerald">Robust (83.3% Accuracy)</span></td>
+                  <td>~1.0%</td>
+                  <td>O(N · d) with QuickSelect / O(N log N · d)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <span>Quantum FL-IoT Security Prototype • Results in Engineering (Elsevier)</span>
+        <span>Simulated Qiskit E91 QKD &amp; Multi-Client FedAvg</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
